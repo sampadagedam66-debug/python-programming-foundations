@@ -94,25 +94,6 @@ Most programs in this repository are standalone Python scripts and do not requir
 
 ---
 
-## 📈 Learning Progress
-
-| Area                   | Status         |
-| ---------------------- | -------------- |
-| Python Basics          | 🟢 Learning    |
-| Variables & Data Types | 🟢 Practicing  |
-| Operators              | 🟢 Practicing  |
-| Conditional Statements | 🟢 Practicing  |
-| Loops                  | 🟢 Practicing  |
-| Collections            | 🟡 In Progress |
-| Functions              | 🟡 In Progress |
-| File Handling          | 🔴 Upcoming    |
-| Exception Handling     | 🔴 Upcoming    |
-| Mini Projects          | 🔴 Upcoming    |
-
-> This progress section will be updated as new concepts and projects are completed.
-
----
-
 ## 🧠 Learning Approach
 
 I am following a practice-first approach:
