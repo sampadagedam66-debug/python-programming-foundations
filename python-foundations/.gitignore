@@ -1,0 +1,35 @@
+# Byte-compiled files
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# VS Code settings
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Data files generated when running the scripts (not source code)
+journal.txt
+expenses.txt
+packing_checklist.txt
+recipe.txt
+attendance.txt
+config.txt
+game_save.txt
+temp_cache.txt
+notes.txt
+cricket_squad.csv
+store_products.csv
+event_registrations.csv
+monthly_budget.xlsx
+tournament_results.xlsx
+employee_salaries.xlsx
+app_settings.txt
+library_data.csv
+bank_accounts.csv

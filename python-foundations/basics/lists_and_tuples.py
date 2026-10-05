@@ -15,7 +15,7 @@ print("---- List Basics: Grocery Shopping List ----")
 shopping_list = ["Rice", "Milk", "Eggs"]
 print(f"Initial list: {shopping_list}")
 
-shopping_list.append("Bread")            # add to the end
+shopping_list.append("Bread")             # add to the end
 shopping_list.insert(1, "Vegetables")     # insert at a specific position
 print(f"After append & insert: {shopping_list}")
 
