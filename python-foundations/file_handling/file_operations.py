@@ -1,92 +1,57 @@
-"""
-file_operations.py
+```python
+# Basic File Handling Operations
 
-Topic: File Operations in Python
-Covers: with statement (context manager) | checking file existence | deleting a file
-Mini use-case: a simple personal notes app
-"""
-
-import os
-
-# ---------------------------------------------------------
-# SECTION 1: with Statement — Reading App Configuration
-# ---------------------------------------------------------
-print("---- with Statement: App Configuration ----")
-
-# create a sample config file first
-with open("config.txt", "w") as config_file:
-    config_file.write("theme=dark\n")
-    config_file.write("font_size=14\n")
-
-# 'with' automatically closes the file afterward, even if an error occurs
-with open("config.txt", "r") as config_file:
-    settings = config_file.read()
-
-print("App settings loaded:")
-print(settings)
+file_name = "student.txt"
 
 
-# ---------------------------------------------------------
-# SECTION 2: Checking File Existence — Saved Game File
-# ---------------------------------------------------------
-print("---- Checking File Existence: Saved Game ----")
+# Write data to the file
+file = open(file_name, "w")
 
-save_file_path = "game_save.txt"
+file.write("Welcome to Python File Handling!\n")
+file.write("I am learning how to work with files in Python.\n")
+file.write("This file is created using Python.\n")
 
-if os.path.exists(save_file_path):
-    print("Save file found. Loading game...")
-    with open(save_file_path, "r") as save_file:
-        print(save_file.read())
-else:
-    print("No save file found. Starting a new game.")
-    with open(save_file_path, "w") as save_file:
-        save_file.write("level=1\nscore=0\n")
-    print("New save file created.")
+file.close()
+
+print("Data written successfully.")
 
 
-# ---------------------------------------------------------
-# SECTION 3: Deleting a File — Clearing Temporary Cache
-# ---------------------------------------------------------
-print("\n---- Deleting a File: Temporary Cache ----")
+# Read the file
+file = open(file_name, "r")
 
-cache_file_path = "temp_cache.txt"
+print("\nFile Content:")
+print(file.read())
 
-with open(cache_file_path, "w") as cache_file:
-    cache_file.write("temporary session data")
-
-print(f"Cache file exists before cleanup: {os.path.exists(cache_file_path)}")
-
-if os.path.exists(cache_file_path):
-    os.remove(cache_file_path)
-
-print(f"Cache file exists after cleanup: {os.path.exists(cache_file_path)}")
+file.close()
 
 
-# ---------------------------------------------------------
-# SECTION 4: Mini Project — Simple Personal Notes App
-# ---------------------------------------------------------
-# Combines everything above: with statement, existence check,
-# append writing, and file deletion — a different domain from
-# every section above.
+# Add more data without deleting existing content
+file = open(file_name, "a")
 
-print("\n---- Mini Project: Personal Notes App ----")
+file.write("This is an additional line.\n")
 
-NOTES_FILE = "notes.txt"
+file.close()
 
-new_note = input("Enter a note to save: ")
+print("Data added successfully.")
 
-with open(NOTES_FILE, "a") as notes_file:
-    notes_file.write(new_note + "\n")
 
-print("\nAll saved notes:")
-if os.path.exists(NOTES_FILE):
-    with open(NOTES_FILE, "r") as notes_file:
-        for line_number, note_line in enumerate(notes_file, start=1):
-            print(f"{line_number}. {note_line.strip()}")
+# Read the updated file line by line
+file = open(file_name, "r")
 
-clear_choice = input("\nClear all notes? (y/n): ").strip().lower()
-if clear_choice == "y":
-    os.remove(NOTES_FILE)
-    print("All notes cleared.")
-else:
-    print("Notes kept.")
+print("\nUpdated File Content:")
+
+for line in file:
+    print(line.strip())
+
+file.close()
+
+
+# Check the number of characters
+file = open(file_name, "r")
+
+content = file.read()
+print("\nNumber of characters:", len(content))
+
+file.close()
+```
+

@@ -2,122 +2,289 @@
 functions.py
 
 Topic: Functions in Python
-Covers: function definition & parameters | default arguments |
-        *args (variable-length arguments) | **kwargs & multiple return values
-Mini use-case: a simple currency converter tool
+
+Covers:
+1. Function definition and parameters
+2. Default arguments
+3. *args
+4. **kwargs
+5. Multiple return values
+6. Mini project using functions
 """
 
-# ---------------------------------------------------------
-# SECTION 1: Function Definition & Parameters — Bus Ticket Pricing
-# ---------------------------------------------------------
-print("---- Function Definition & Parameters: Bus Ticket Pricing ----")
 
-def calculate_ticket_price(distance_km, passenger_type):
-    rate_per_km = 2.5
-    base_fare = distance_km * rate_per_km
+# =========================================================
+# SECTION 1: Function Definition and Parameters
+# Bus Ticket Calculator
+# =========================================================
+
+print("\n===== BUS TICKET CALCULATOR =====")
+
+
+def calculate_ticket_price(distance, passenger_type):
+    rate = 2.5
+    fare = distance * rate
 
     if passenger_type == "child":
-        return base_fare * 0.5  # children pay half fare
-    return base_fare
+        fare = fare * 0.5
+    elif passenger_type == "student":
+        fare = fare * 0.8
+
+    return fare
 
 
-adult_fare = calculate_ticket_price(40, "adult")
-child_fare = calculate_ticket_price(40, "child")
-print(f"Adult fare for 40km: Rs {adult_fare:.2f}")
-print(f"Child fare for 40km: Rs {child_fare:.2f}")
+# Get valid distance
+while True:
+    try:
+        distance = float(input("Enter travel distance (km): "))
+
+        if distance > 0:
+            break
+        else:
+            print("Distance must be greater than 0.")
+
+    except ValueError:
+        print("Please enter a valid number.")
 
 
-# ---------------------------------------------------------
-# SECTION 2: Default Arguments — Gym Membership Fee
-# ---------------------------------------------------------
-print("\n---- Default Arguments: Gym Membership Fee ----")
+passenger_type = input(
+    "Enter passenger type (adult/child/student): "
+).strip().lower()
 
-def calculate_membership_fee(monthly_rate, duration_months=1):
-    total = monthly_rate * duration_months
-    if duration_months >= 6:
-        total *= 0.9  # 10% discount for 6+ months
+
+if passenger_type in ["adult", "child", "student"]:
+    ticket_price = calculate_ticket_price(distance, passenger_type)
+
+    print("\n--- Ticket Details ---")
+    print(f"Distance       : {distance:.1f} km")
+    print(f"Passenger Type : {passenger_type}")
+    print(f"Ticket Price   : Rs {ticket_price:.2f}")
+
+else:
+    print("Invalid passenger type.")
+
+
+# =========================================================
+# SECTION 2: Default Arguments
+# Gym Membership Calculator
+# =========================================================
+
+print("\n===== GYM MEMBERSHIP =====")
+
+
+def calculate_membership_fee(months, monthly_fee=1200):
+    total = months * monthly_fee
+
+    if months >= 6:
+        total = total * 0.90
+
     return total
 
 
-single_month_fee = calculate_membership_fee(1200)               # uses default duration
-six_month_fee = calculate_membership_fee(1200, duration_months=6)  # overrides default
-print(f"1 month (default): Rs {single_month_fee:.2f}")
-print(f"6 months (with discount): Rs {six_month_fee:.2f}")
+while True:
+    try:
+        months = int(input("Enter membership duration (months): "))
+
+        if months > 0:
+            break
+        else:
+            print("Months must be greater than 0.")
+
+    except ValueError:
+        print("Please enter a whole number.")
 
 
-# ---------------------------------------------------------
-# SECTION 3: *args — Exam Score Averaging
-# ---------------------------------------------------------
-print("\n---- *args: Exam Score Averaging ----")
+membership_fee = calculate_membership_fee(months)
 
-def calculate_average_score(*scores):
-    if len(scores) == 0:
+print("\n--- Membership Details ---")
+print(f"Duration : {months} months")
+print(f"Total Fee: Rs {membership_fee:.2f}")
+
+if months >= 6:
+    print("You received a 10% discount!")
+
+
+# =========================================================
+# SECTION 3: *args
+# Student Marks Average
+# =========================================================
+
+print("\n===== STUDENT MARKS =====")
+
+
+def calculate_average(*marks):
+    if len(marks) == 0:
         return 0
-    return sum(scores) / len(scores)
+
+    return sum(marks) / len(marks)
 
 
-student_a_avg = calculate_average_score(85, 90, 78)          # 3 subjects
-student_b_avg = calculate_average_score(70, 88, 95, 60, 82)   # 5 subjects
-print(f"Student A average (3 subjects): {student_a_avg:.2f}")
-print(f"Student B average (5 subjects): {student_b_avg:.2f}")
+while True:
+    try:
+        number_of_subjects = int(input("Enter number of subjects: "))
+
+        if number_of_subjects > 0:
+            break
+        else:
+            print("Number of subjects must be greater than 0.")
+
+    except ValueError:
+        print("Please enter a whole number.")
 
 
-# ---------------------------------------------------------
-# SECTION 4: **kwargs & Multiple Return Values
-# ---------------------------------------------------------
-print("\n---- **kwargs: College Profile Builder ----")
+marks = []
 
-def build_student_profile(**details):
-    print("Student Profile:")
-    for field_name, field_value in details.items():
-        print(f"  {field_name}: {field_value}")
+for i in range(number_of_subjects):
+
+    while True:
+        try:
+            mark = float(input(f"Enter marks for subject {i + 1}: "))
+
+            if 0 <= mark <= 100:
+                marks.append(mark)
+                break
+            else:
+                print("Marks must be between 0 and 100.")
+
+        except ValueError:
+            print("Please enter a valid number.")
 
 
-build_student_profile(name="Ananya Rao", branch="CSE", year=1, city="Pune")
+average = calculate_average(*marks)
 
-print("\n---- Multiple Return Values: Temperature Converter ----")
+print("\n--- Result ---")
+print(f"Total Subjects : {number_of_subjects}")
+print(f"Average Marks  : {average:.2f}")
+
+if average >= 75:
+    print("Grade: A")
+elif average >= 60:
+    print("Grade: B")
+elif average >= 50:
+    print("Grade: C")
+else:
+    print("Grade: Needs Improvement")
+
+
+# =========================================================
+# SECTION 4: **kwargs
+# Student Profile
+# =========================================================
+
+print("\n===== STUDENT PROFILE =====")
+
+
+def create_student_profile(**details):
+    print("\n--- Student Information ---")
+
+    for key, value in details.items():
+        print(f"{key.capitalize()} : {value}")
+
+
+name = input("Enter your name: ").strip()
+branch = input("Enter your branch: ").strip()
+year = input("Enter your year: ").strip()
+city = input("Enter your city: ").strip()
+
+
+create_student_profile(
+    name=name,
+    branch=branch,
+    year=year,
+    city=city
+)
+
+
+# =========================================================
+# SECTION 5: Multiple Return Values
+# Temperature Converter
+# =========================================================
+
+print("\n===== TEMPERATURE CONVERTER =====")
+
 
 def convert_temperature(celsius):
     fahrenheit = (celsius * 9 / 5) + 32
     kelvin = celsius + 273.15
-    return fahrenheit, kelvin  # returns a tuple of two values
+
+    return fahrenheit, kelvin
 
 
-temp_f, temp_k = convert_temperature(30)
-print(f"30C = {temp_f:.2f}F = {temp_k:.2f}K")
+while True:
+    try:
+        celsius = float(input("Enter temperature in Celsius: "))
+
+        if celsius >= -273.15:
+            break
+        else:
+            print("Temperature cannot be below -273.15 C.")
+
+    except ValueError:
+        print("Please enter a valid number.")
 
 
-# ---------------------------------------------------------
-# SECTION 5: Mini Project — Currency Converter Tool
-# ---------------------------------------------------------
-# Combines multiple small functions working together, a different
-# domain from every section above.
+fahrenheit, kelvin = convert_temperature(celsius)
 
-print("\n---- Mini Project: Currency Converter Tool ----")
+print("\n--- Temperature ---")
+print(f"Celsius    : {celsius:.2f} C")
+print(f"Fahrenheit : {fahrenheit:.2f} F")
+print(f"Kelvin     : {kelvin:.2f} K")
 
-EXCHANGE_RATES = {
+
+# =========================================================
+# SECTION 6: Mini Project
+# Currency Converter
+# =========================================================
+
+print("\n===== CURRENCY CONVERTER =====")
+
+
+exchange_rates = {
     "USD": 83.2,
     "EUR": 90.5,
-    "GBP": 105.8,
+    "GBP": 105.8
 }
 
 
-def convert_to_inr(amount, currency_code):
-    if currency_code not in EXCHANGE_RATES:
+def convert_to_inr(amount, currency):
+    if currency not in exchange_rates:
         return None
-    rate = EXCHANGE_RATES[currency_code]
-    return amount * rate
+
+    return amount * exchange_rates[currency]
 
 
-def format_currency_result(amount, currency_code, converted_amount):
-    if converted_amount is None:
-        return f"Currency '{currency_code}' is not supported."
-    return f"{amount} {currency_code} = Rs {converted_amount:.2f}"
+def show_currency_result(amount, currency, result):
+    if result is None:
+        print("Sorry, this currency is not supported.")
+    else:
+        print(f"\n{amount:.2f} {currency} = Rs {result:.2f}")
 
 
-amount_to_convert = float(input("Enter amount to convert: "))
-currency_code_input = input("Enter currency code (USD/EUR/GBP): ").strip().upper()
+while True:
+    try:
+        amount = float(input("Enter amount: "))
 
-converted_value = convert_to_inr(amount_to_convert, currency_code_input)
-result_message = format_currency_result(amount_to_convert, currency_code_input, converted_value)
-print(result_message)
+        if amount > 0:
+            break
+        else:
+            print("Amount must be greater than 0.")
+
+    except ValueError:
+        print("Please enter a valid number.")
+
+
+currency = input(
+    "Enter currency (USD/EUR/GBP): "
+).strip().upper()
+
+
+converted_amount = convert_to_inr(amount, currency)
+
+show_currency_result(
+    amount,
+    currency,
+    converted_amount
+)
+
+
+print("\n===== PROGRAM COMPLETED =====")
