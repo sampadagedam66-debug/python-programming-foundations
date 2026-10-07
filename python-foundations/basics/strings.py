@@ -1,117 +1,118 @@
 """
 strings.py
-
 Topic: Strings in Python
-Covers: indexing & slicing | string methods (case, strip, replace, split, join) |
-        f-strings & formatting | string checking methods
-Mini use-case: a movie name formatter for a ticket booking display
 """
 
-# ---------------------------------------------------------
-# SECTION 1: Indexing & Slicing — Vehicle Number Plate Parser
-# ---------------------------------------------------------
-print("---- Indexing & Slicing: Number Plate Parser ----")
 
-number_plate = "MH12AB1234"
+# 1. Number Plate
+def number_plate():
+    print("\n--- NUMBER PLATE ---")
 
-state_code = number_plate[0:2]     # MH
-district_code = number_plate[2:4]  # 12
-series_code = number_plate[4:6]    # AB
-unique_number = number_plate[6:]   # 1234
-last_char = number_plate[-1]       # last digit using negative indexing
+    plate = input("Enter vehicle number plate: ").upper().strip()
 
-print(f"Full Plate: {number_plate}")
-print(f"State Code: {state_code}")
-print(f"District Code: {district_code}")
-print(f"Series Code: {series_code}")
-print(f"Unique Number: {unique_number}")
-print(f"Last Character: {last_char}")
+    if len(plate) >= 8 and plate[:2].isalpha() and plate[2:4].isdigit():
+        print("Full Plate:", plate)
+        print("State Code:", plate[:2])
+        print("District Code:", plate[2:4])
+        print("Series Code:", plate[4:6])
+        print("Number:", plate[6:])
+        print("Last Character:", plate[-1])
+    else:
+        print("Invalid plate! Example: MH12AB1234")
 
 
-# ---------------------------------------------------------
-# SECTION 2: String Methods — Email Address Cleanup
-# ---------------------------------------------------------
-print("\n---- String Methods: Email Cleanup ----")
+# 2. Email Cleanup
+def email_cleanup():
+    print("\n--- EMAIL CLEANUP ---")
 
-raw_email = "   RahulSharma99@GMAIL.com   "
+    email = input("Enter your email: ").strip().lower()
 
-cleaned_email = raw_email.strip().lower()
-username_part, domain_part = cleaned_email.split("@")
-corrected_email = cleaned_email.replace("gmail", "gmail")  # placeholder for real fixes
-
-print(f"Raw Email: '{raw_email}'")
-print(f"Cleaned Email: '{cleaned_email}'")
-print(f"Username Part: {username_part}")
-print(f"Domain Part: {domain_part}")
-
-# join is the reverse of split — combining parts back together
-rebuilt_email = "@".join([username_part, domain_part])
-print(f"Rebuilt Email: {rebuilt_email}")
+    if email.count("@") == 1:
+        parts = email.split("@")
+        print("Clean Email:", email)
+        print("Username:", parts[0])
+        print("Domain:", parts[1])
+        print("Email again:", "@".join(parts))
+    else:
+        print("Invalid email! Enter exactly one @.")
 
 
-# ---------------------------------------------------------
-# SECTION 3: f-strings & Formatting — Restaurant Order Receipt
-# ---------------------------------------------------------
-print("\n---- f-strings & Formatting: Restaurant Receipt ----")
+# 3. Shopping Receipt
+def shopping_receipt():
+    print("\n--- SHOPPING RECEIPT ---")
 
-item_1, price_1 = "Paneer Butter Masala", 220.5
-item_2, price_2 = "Butter Naan", 45.0
-item_3, price_3 = "Cold Coffee", 90.75
+    item = input("Enter item name: ")
 
-print(f"{item_1:.<25}{price_1:.>8.2f}")
-print(f"{item_2:.<25}{price_2:.>8.2f}")
-print(f"{item_3:.<25}{price_3:.>8.2f}")
+    try:
+        price = float(input("Enter item price: "))
+        quantity = int(input("Enter quantity: "))
 
-total = price_1 + price_2 + price_3
-print(f"{'TOTAL':.<25}{total:.>8.2f}")
+        if price < 0 or quantity <= 0:
+            print("Price must be positive and quantity must be greater than 0.")
+            return
 
+        total = price * quantity
 
-# ---------------------------------------------------------
-# SECTION 4: String Checking Methods — Password Rule Checker
-# ---------------------------------------------------------
-print("\n---- String Checking Methods: Password Rules ----")
+        print(f"\n{item:<20} Rs {price:.2f}")
+        print(f"Quantity: {quantity}")
+        print(f"Total:    Rs {total:.2f}")
 
-password = "Secure123"
-
-has_letters = any(character.isalpha() for character in password)
-has_digits = any(character.isdigit() for character in password)
-starts_with_upper = password[0].isupper()
-contains_space = " " in password
-ends_with_digit = password[-1].isdigit()
-
-print(f"Password: {password}")
-print(f"Has letters: {has_letters}")
-print(f"Has digits: {has_digits}")
-print(f"Starts with uppercase: {starts_with_upper}")
-print(f"Contains space: {contains_space}")
-print(f"Ends with digit: {ends_with_digit}")
+    except ValueError:
+        print("Please enter a valid price and quantity.")
 
 
-# ---------------------------------------------------------
-# SECTION 5: Mini Project — Movie Name Formatter
-# ---------------------------------------------------------
-# Combines cleanup, formatting, and string checks into one small tool,
-# a different domain from every section above.
+# 4. Password Strength
+def password_checker():
+    print("\n--- PASSWORD CHECKER ---")
 
-print("\n---- Mini Project: Movie Ticket Booking Formatter ----")
+    password = input("Enter a password: ")
 
-raw_title = "   the DARK knight    "
+    if not password:
+        print("Password cannot be empty.")
+        return
 
-# clean and convert to title case for display
-formatted_title = raw_title.strip().title()
+    has_letter = any(c.isalpha() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    has_space = " " in password
 
-# collapse any accidental multiple spaces left inside the title
-formatted_title = " ".join(formatted_title.split())
+    score = sum([has_letter, has_digit, has_upper, len(password) >= 8])
 
-seat_number = "G14"
-show_time = "7:30 PM"
+    if has_space:
+        strength = "Weak"
+    elif score == 4:
+        strength = "Strong"
+    elif score >= 2:
+        strength = "Medium"
+    else:
+        strength = "Weak"
 
-booking_message = (
-    f"Booking Confirmed!\n"
-    f"Movie: {formatted_title}\n"
-    f"Seat: {seat_number} | Show Time: {show_time}"
-)
+    print("Has letters:", has_letter)
+    print("Has digits:", has_digit)
+    print("Has uppercase:", has_upper)
+    print("Password strength:", strength)
 
-print(f"Raw Title: '{raw_title}'")
-print(f"Formatted Title: '{formatted_title}'")
-print("\n" + booking_message)
+
+# 5. Movie Ticket
+def movie_ticket():
+    print("\n--- MOVIE TICKET ---")
+
+    movie = input("Enter movie name: ").strip().title()
+    movie = " ".join(movie.split())
+
+    seat = input("Enter seat number: ").upper()
+    time = input("Enter show time: ")
+
+    print("\n🎬 BOOKING CONFIRMED!")
+    print(f"Movie: {movie}")
+    print(f"Seat: {seat}")
+    print(f"Show Time: {time}")
+    print("🎉 Enjoy your movie!")
+
+
+# Run all sections
+number_plate()
+email_cleanup()
+shopping_receipt()
+password_checker()
+movie_ticket()
