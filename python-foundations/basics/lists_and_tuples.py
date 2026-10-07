@@ -1,127 +1,96 @@
 """
 lists_and_tuples.py
-
 Topic: Lists and Tuples in Python
-Covers: list creation & basic operations | slicing & list comprehension |
-        tuple basics & immutability | nested lists
-Mini use-case: A movie watchlist manager
+
+Covers:
+1. List operations
+2. Slicing and list comprehension
+3. Tuples
+4. Nested lists
+5. Mini project
 """
 
-# ---------------------------------------------------------
-# SECTION 1: List Creation & Basic Operations — Grocery Shopping List
-# ---------------------------------------------------------
-print("---- List Basics: Grocery Shopping List ----")
+# 1. Grocery List
+print("\n--- GROCERY LIST ---")
 
-shopping_list = ["Rice", "Milk", "Eggs"]
-print(f"Initial list: {shopping_list}")
+items = input("Enter grocery items separated by comma: ").split(",")
 
-shopping_list.append("Bread")             # add to the end
-shopping_list.insert(1, "Vegetables")     # insert at a specific position
-print(f"After append & insert: {shopping_list}")
+items = [item.strip() for item in items if item.strip()]
 
-shopping_list.remove("Eggs")              # remove by value
-print(f"After removing Eggs: {shopping_list}")
+print("Your list:", items)
 
-shopping_list.sort()                      # sort alphabetically
-print(f"Sorted list: {shopping_list}")
+add = input("Add one more item: ").strip()
+if add:
+    items.append(add)
 
-print(f"Total items: {len(shopping_list)}")
+print("Updated list:", items)
 
 
-# ---------------------------------------------------------
-# SECTION 2: Slicing & List Comprehension — Cricket Match Scores
-# ---------------------------------------------------------
-print("\n---- Slicing & Comprehension: Cricket Scores ----")
+# 2. Student Marks
+print("\n--- STUDENT MARKS ---")
 
-# runs scored on each ball across an innings
-runs_per_ball = [1, 4, 0, 6, 2, 1, 4, 0, 6, 6, 1, 2]
+marks = list(map(int, input("Enter marks separated by space: ").split()))
 
-last_five_balls = runs_per_ball[-5:]
-print(f"All balls: {runs_per_ball}")
-print(f"Last 5 balls: {last_five_balls}")
+print("All marks:", marks)
+print("Last 3 marks:", marks[-3:])
 
-# list comprehension: keep only boundary hits (4s and 6s)
-boundary_hits = [run for run in runs_per_ball if run == 4 or run == 6]
-print(f"Boundary hits (4s & 6s): {boundary_hits}")
-print(f"Total boundaries: {len(boundary_hits)}")
+good_marks = [mark for mark in marks if mark >= 75]
+print("Marks 75 and above:", good_marks)
 
-total_runs = sum(runs_per_ball)
-print(f"Total runs scored: {total_runs}")
+print("Average:", sum(marks) / len(marks))
 
 
-# ---------------------------------------------------------
-# SECTION 3: Tuple Basics & Immutability — GPS Coordinates
-# ---------------------------------------------------------
-print("\n---- Tuples: Delivery GPS Coordinates ----")
+# 3. Tuple
+print("\n--- STUDENT PROFILE ---")
 
-warehouse_location = (19.0760, 72.8777)   # (latitude, longitude)
-delivery_point_1 = (18.5204, 73.8567)
-delivery_point_2 = (21.1458, 79.0882)
+name = input("Enter your name: ")
+branch = input("Enter your branch: ")
+year = input("Enter your year: ")
 
-# unpacking a tuple into separate variables
-latitude, longitude = warehouse_location
-print(f"Warehouse coordinates: {warehouse_location}")
-print(f"Latitude: {latitude}, Longitude: {longitude}")
+student = (name, branch, year)
 
-all_delivery_points = (delivery_point_1, delivery_point_2)
-print(f"Delivery points: {all_delivery_points}")
-
-# tuples are immutable — this line would raise an error if uncommented:
-# warehouse_location[0] = 20.0000
-print("Tuples are immutable — coordinates can't be accidentally changed once set.")
+print("Student information:", student)
+print("Name:", student[0])
+print("Branch:", student[1])
+print("Year:", student[2])
 
 
-# ---------------------------------------------------------
-# SECTION 4: Nested Lists — Classroom Seating Arrangement
-# ---------------------------------------------------------
-print("\n---- Nested Lists: Classroom Seating ----")
+# 4. Nested List
+print("\n--- CLASSROOM SEATING ---")
 
-# 3 rows, 3 seats each — a list of lists
-classroom_seating = [
-    ["Aman", "Priya", "Rohit"],
-    ["Sneha", "Vikram", "Neha"],
-    ["Karan", "Isha", "Dev"],
+classroom = [
+    ["Aarav", "Riya"],
+    ["Rahul", "Sneha"]
 ]
 
-print("Full seating chart:")
-print(classroom_seating[0])
-print(classroom_seating[1])
-print(classroom_seating[2])
+print("Classroom:")
+for row in classroom:
+    print(row)
 
-# accessing a specific seat: row 1, seat 2
-student_at_seat = classroom_seating[1][2]
-print(f"\nStudent at Row 2, Seat 3: {student_at_seat}")
-
-# updating a seat (someone changed seats)
-classroom_seating[0][1] = "Farhan"
-print(f"After seat change, Row 1: {classroom_seating[0]}")
+print("Student at Row 1, Seat 2:", classroom[0][1])
 
 
-# ---------------------------------------------------------
-# SECTION 5: Mini Project — Movie Watchlist Manager
-# ---------------------------------------------------------
-# A small list-driven utility, a different domain from every
-# section above, combining add/remove/sort/search operations.
+# 5. Movie Watchlist
+print("\n--- MOVIE WATCHLIST ---")
 
-print("\n---- Mini Project: Movie Watchlist Manager ----")
+movies = []
 
-watchlist = ["Inception", "Interstellar", "The Matrix"]
-print(f"Current watchlist: {watchlist}")
+for i in range(3):
+    movie = input(f"Enter movie {i + 1}: ")
+    movies.append(movie)
 
-new_movie = input("Enter a movie to add to your watchlist: ")
-if new_movie not in watchlist:
-    watchlist.append(new_movie)
-    print(f"Added '{new_movie}' to watchlist.")
+print("Your watchlist:", movies)
+
+remove = input("Enter a movie to remove: ")
+
+if remove in movies:
+    movies.remove(remove)
+    print("Movie removed!")
 else:
-    print(f"'{new_movie}' is already in your watchlist.")
+    print("Movie not found.")
 
-watched_movie = input("Enter a movie you've finished watching (to remove): ")
-if watched_movie in watchlist:
-    watchlist.remove(watched_movie)
-    print(f"Removed '{watched_movie}' — enjoy, it's watched!")
-else:
-    print(f"'{watched_movie}' was not found in your watchlist.")
+movies.sort()
 
-watchlist.sort()
-print(f"\nFinal sorted watchlist: {watchlist}")
-print(f"Movies remaining to watch: {len(watchlist)}")
+print("Final watchlist:", movies)
+
+print("\n🎉 Thanks for using the program!")
