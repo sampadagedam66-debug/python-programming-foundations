@@ -1,64 +1,162 @@
 """
 csv_write.py
+Topic: Data Handling - Writing CSV files
 
-Topic: Writing CSV Files in Python
-Covers: csv.writer basics | writing with a header row | csv.DictWriter
+Covers:
+1. Write mode "w" (new file / overwrite) and append mode "a" (add rows)
+2. csv.DictWriter - write dictionaries  (writeheader, writerows)
+3. csv.writer     - write lists         (writerow)
+4. Checking the input before saving it
+5. Reading the file back to confirm it was saved
+
+Run the file and type your answers when asked.
+The files it creates can be opened with csv_read.py.
+Tip: try a name like  Rao, Asha  - the csv module adds quotes automatically.
 """
 
 import csv
+import os
+import sys
 
-# ---------------------------------------------------------
-# SECTION 1: csv.writer Basics — Cricket Squad List
-# ---------------------------------------------------------
-print("---- csv.writer: Cricket Squad List ----")
-
-squad_members = [
-    ["Player Name", "Role"],
-    ["Rohit Verma", "Batsman"],
-    ["Kunal Shah", "Bowler"],
-    ["Arjun Rao", "All-Rounder"],
-]
-
-with open("cricket_squad.csv", "w", newline="") as squad_file:
-    csv_writer = csv.writer(squad_file)
-    for row in squad_members:
-        csv_writer.writerow(row)
-
-print("Squad list written to cricket_squad.csv")
+FIELDS = ["name", "roll_no", "branch", "maths", "science", "english"]
 
 
-# ---------------------------------------------------------
-# SECTION 2: Writing With a Header Row — Store Product List
-# ---------------------------------------------------------
-print("\n---- Header Row: Store Product List ----")
-
-with open("store_products.csv", "w", newline="") as product_file:
-    csv_writer = csv.writer(product_file)
-    csv_writer.writerow(["Product", "Price", "Quantity"])   # header row
-    csv_writer.writerow(["Notebook", 45, 100])
-    csv_writer.writerow(["Pen", 10, 250])
-    csv_writer.writerow(["Eraser", 5, 150])
-
-print("Product list written to store_products.csv")
+def read_whole(prompt):
+    """Keep asking until a whole number is entered."""
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("  Please enter a whole number.")
 
 
-# ---------------------------------------------------------
-# SECTION 3: csv.DictWriter — Event Registration List
-# ---------------------------------------------------------
-print("\n---- DictWriter: Event Registration ----")
+def read_mark(prompt):
+    """Keep asking until a mark between 0 and 100 is entered."""
+    while True:
+        try:
+            mark = float(input(prompt))
+        except ValueError:
+            print("  Please enter a number.")
+            continue
 
-registrations = [
-    {"name": "Neha Joshi", "city": "Pune", "ticket_type": "VIP"},
-    {"name": "Farhan Ali", "city": "Mumbai", "ticket_type": "General"},
-    {"name": "Divya Menon", "city": "Pune", "ticket_type": "General"},
-]
+        if 0 <= mark <= 100:
+            if mark.is_integer():
+                return int(mark)        # save 85 instead of 85.0
+            return mark
+        print("  Marks must be between 0 and 100.")
 
-field_names = ["name", "city", "ticket_type"]
 
-with open("event_registrations.csv", "w", newline="") as registration_file:
-    dict_writer = csv.DictWriter(registration_file, fieldnames=field_names)
-    dict_writer.writeheader()          # writes the header automatically
-    for entry in registrations:
-        dict_writer.writerow(entry)
+def show_file(name):
+    """Read a CSV file and print it in neat columns."""
+    print("\n--- CONTENTS OF", name, "---")
+    with open(name, newline="", encoding="utf-8") as file:
+        for row in csv.reader(file):
+            for value in row:
+                print(f"{value:<12}", end="")
+            print()
 
-print("Registrations written to event_registrations.csv")
+
+print("===== CSV WRITER =====")
+
+# ---------------------------------------------------
+# 1. CHOOSE THE FILE AND THE MODE
+# ---------------------------------------------------
+filename = input("Enter file name to save (press Enter for new_students.csv): ").strip()
+if filename == "":
+    filename = "new_students.csv"
+if not filename.endswith(".csv"):
+    filename += ".csv"
+
+mode = "w"                  # "w" = create a new file (or overwrite)
+write_header = True
+
+if os.path.exists(filename):
+    print("\n" + filename, "already exists.")
+    choice = input("Type A to add rows, or W to overwrite it: ").strip().lower()
+
+    if choice == "a":
+        mode = "a"          # "a" = append rows at the end
+        write_header = False
+
+        # the old file must have the same columns
+        with open(filename, newline="", encoding="utf-8") as file:
+            first_row = next(csv.reader(file), [])
+        if first_row != FIELDS:
+            print("The columns in that file are different. Nothing was changed.")
+            sys.exit()
+    elif choice == "w":
+        sure = input("This will erase the old data. Are you sure? (yes/no): ").strip().lower()
+        if sure != "yes":
+            print("Cancelled. Nothing was changed.")
+            sys.exit()
+    else:
+        print("Cancelled. Nothing was changed.")
+        sys.exit()
+
+
+# ---------------------------------------------------
+# 2. COLLECT THE DATA
+# ---------------------------------------------------
+count = read_whole("\nHow many students do you want to add? ")
+if count <= 0:
+    print("Nothing to write.")
+    sys.exit()
+
+records = []                # a list of dictionaries
+
+for number in range(1, count + 1):
+    print("\nStudent", number)
+    record = {
+        "name": input("  Name: ").strip().title(),
+        "roll_no": read_whole("  Roll number: "),
+        "branch": input("  Branch: ").strip().upper(),
+        "maths": read_mark("  Maths marks: "),
+        "science": read_mark("  Science marks: "),
+        "english": read_mark("  English marks: "),
+    }
+    records.append(record)
+
+
+# ---------------------------------------------------
+# 3. WRITE WITH csv.DictWriter  (dictionaries)
+# ---------------------------------------------------
+with open(filename, mode, newline="", encoding="utf-8") as file:
+    writer = csv.DictWriter(file, fieldnames=FIELDS)
+    if write_header:
+        writer.writeheader()        # the first row with column names
+    writer.writerows(records)       # many rows at once
+
+print("\n" + str(len(records)), "row(s) saved in", filename)
+
+
+# ---------------------------------------------------
+# 4. WRITE WITH csv.writer  (lists) - a summary file
+# ---------------------------------------------------
+base, extension = os.path.splitext(filename)
+summary_file = base + "_summary" + extension
+
+with open(summary_file, "w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerow(["name", "total", "average", "result"])     # one row
+
+    for record in records:
+        total = record["maths"] + record["science"] + record["english"]
+        average = round(total / 3, 2)
+
+        if average >= 40:
+            result = "Pass"
+        else:
+            result = "Fail"
+
+        writer.writerow([record["name"], total, average, result])
+
+print("Summary of the new students saved in", summary_file)
+
+
+# ---------------------------------------------------
+# 5. READ THE FILES BACK
+# ---------------------------------------------------
+show_file(filename)
+show_file(summary_file)
+
+print("\nDone!")
