@@ -1,91 +1,140 @@
 """
-variables_and_data_types.py
-Topic: Variables and Data Types
+variables_and_data_types_advanced.py
+Topic: Variables and Data Types (slightly advanced)
+
+Covers: multiple assignment, swapping, constants, type hints,
+type detection and conversion, number types, mutable vs immutable,
+identity (id / is), copying, None, and truthy / falsy values.
+
+Run the file and type your answers when asked.
 """
 
-# Variables, multiple assignment and type hints
+import sys
 
-name: str = input("Enter your name: ")
 
-while True:
+def read_int(prompt):
+    """Keep asking until a valid whole number is entered."""
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("  Please enter a whole number.")
+
+
+def detect_type(text):
+    """Turn text into the most suitable type: bool, int, float or str."""
+    if text.lower() in ("true", "false"):
+        return text.lower() == "true"
+    for convert in (int, float):
+        try:
+            return convert(text)
+        except ValueError:
+            pass
+    return text
+
+
+# ---------------------------------------------------
+# 1. VARIABLES
+# ---------------------------------------------------
+print("--- 1. VARIABLES ---")
+
+x = y = z = 0                                    # one value, many variables
+print("x, y, z =", x, y, z)
+
+first = input("\nEnter first value : ")
+second = input("Enter second value: ")
+print(f"Before swap -> first: {first}, second: {second}")
+
+first, second = second, first                    # swap in one line
+print(f"After swap  -> first: {first}, second: {second}")
+
+MAX_LIMIT = 100                                  # CAPITALS = constant (by convention)
+
+score: int = "ninety"                            # type hint says int, but Python does not enforce it
+print("\nscore has a type hint of int, yet its type is", type(score).__name__)
+
+
+# ---------------------------------------------------
+# 2. TYPE DETECTION
+# ---------------------------------------------------
+print("\n--- 2. TYPE DETECTION ---")
+
+text = input("Enter any value (try 42, 3.14, True, hello): ")
+value = detect_type(text)
+
+print(f"\nValue        : {value!r}")
+print(f"Type         : {type(value).__name__}")
+print(f"Memory id    : {id(value)}")
+print(f"Size (bytes) : {sys.getsizeof(value)}")
+print(f"As a bool    : {bool(value)}")
+
+
+# ---------------------------------------------------
+# 3. NUMBER TYPES
+# ---------------------------------------------------
+print("\n--- 3. NUMBER TYPES ---")
+
+n = read_int("Enter a whole number: ")
+
+print(f"\nBinary / Octal / Hex : {bin(n)} / {oct(n)} / {hex(n)}")
+print(f"As float             : {float(n)}")
+print(f"As complex           : {complex(n, 2)}")
+print(f"n to the power 20    : {n ** 20}   (int has no size limit)")
+print(f"0.1 + 0.2            : {0.1 + 0.2}   (floats are approximate)")
+print(f"round(0.1 + 0.2, 2)  : {round(0.1 + 0.2, 2)}")
+print(f"True + True          : {True + True}   (bool is a kind of int)")
+
+
+# ---------------------------------------------------
+# 4. MUTABLE vs IMMUTABLE
+# ---------------------------------------------------
+print("\n--- 4. MUTABLE vs IMMUTABLE ---")
+
+word = input("Enter a word: ")
+
 try:
-age: int = int(input("Enter your age: "))
-break
-except ValueError:
-print("Enter a valid age.")
+    word[0] = "X"                                # strings cannot be changed in place
+except TypeError as error:
+    print("Strings are immutable ->", error)
 
-height: float = float(input("Enter your height: "))
-is_student: bool = input("Are you a student? (yes/no): ").lower() == "yes"
+fruits = ["apple", "banana"]
+fruits.append(input("Add a fruit: "))
 
-x, y = 10, 20
-x, y = y, x
+alias = fruits                                   # same list, new name
+copied = fruits.copy()                           # a separate list
+fruits.append("mango")
 
-MAX_AGE: int = 100
+print("\nfruits :", fruits)
+print("alias  :", alias, "<- changed too (same object)")
+print("copied :", copied, "<- not changed")
+print("alias is fruits  :", alias is fruits)
+print("copied is fruits :", copied is fruits)
 
-print("\n--- BASIC TYPES ---")
-print(f"{name = } | {type(name).**name**}")
-print(f"{age = } | {type(age).**name**}")
-print(f"{height = } | {type(height).**name**}")
-print(f"{is_student = } | {type(is_student).**name**}")
+# A tuple is immutable, but a list stored inside it can still change
+data = (1, [2, 3])
+data[1].append(4)
+print("\nTuple with a list inside:", data)
 
-# Other data types
+try:
+    bad = {["a", "b"]: "value"}                  # lists cannot be dictionary keys
+except TypeError as error:
+    print("Dictionary key error ->", error)
 
-complex_num = complex(age, 2)
+
+# ---------------------------------------------------
+# 5. NONE AND TRUTHY / FALSY
+# ---------------------------------------------------
+print("\n--- 5. NONE AND TRUTHY / FALSY ---")
+
 nothing = None
-skills = ["Python", "Git", "SQL"]
-coordinates = (18.52, 73.85)
-unique_values = {10, 20, 20, 30}
-student = {"name": name, "age": age}
+print("None type   :", type(nothing).__name__)
+print("Is None?    :", nothing is None)
 
-print("\n--- COLLECTIONS & OTHER TYPES ---")
-for value in [complex_num, nothing, skills, coordinates, unique_values, student]:
-print(f"{value!r:<30} -> {type(value).**name**}")
+print()
+for item in [0, 0.0, "", "0", [], [0], {}, None]:
+    print(f"bool({item!r:>4}) -> {bool(item)}")
 
-# Type conversion with error handling
-
-text = input("\nEnter a number for conversion: ")
-
-for conversion in (int, float):
-try:
-print(f"{conversion.**name**}(): {conversion(text)}")
-except ValueError:
-print(f"{conversion.**name**}(): conversion failed")
-
-print(f"str(): {str(age)}")
-print(f"bool(): {bool(text)}")
-
-# Mutable vs immutable, alias vs copy
-
-numbers = [1, 2, 3]
-alias = numbers
-copied = numbers.copy()
-
-numbers.append(4)
-
-print("\n--- MUTABILITY & IDENTITY ---")
-print("numbers:", numbers)
-print("alias  :", alias)
-print("copy   :", copied)
-
-print("alias is numbers :", alias is numbers)
-print("copy is numbers  :", copied is numbers)
-print("id(numbers)      :", id(numbers))
-
-# == vs is
-
-a = [1, 2]
-b = [1, 2]
-c = a
-
-print("\n--- == VS IS ---")
-print("a == b:", a == b)
-print("a is b:", a is b)
-print("a is c:", a is c)
-
-print("\nMAX_AGE:", MAX_AGE)
-print("Swapped values:", x, y)
-print("None check:", nothing is None)
-print("Program completed.")
+print("\nDone!")
 
 
 
