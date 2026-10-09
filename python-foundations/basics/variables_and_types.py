@@ -1,157 +1,91 @@
 """
-variables_and_types.py
-Topic: Variables and Data Types in Python
-
-Covers:
-1. Basic data types
-2. type() and isinstance()
-3. Constants and type conversion
-4. Mutability and object identity
-5. Augmented assignment
-6. Float precision
-7. Boolean and integer relationship
-8. Mini project - AI API billing
+variables_and_data_types.py
+Topic: Variables and Data Types
 """
 
-# 1. Basic Data Types
-print("\n--- SYSTEM CONFIGURATION ---")
+# Variables, multiple assignment and type hints
 
-application = input("Enter application name: ").strip()
-version = float(input("Enter application version: "))
-users = int(input("Enter number of active users: "))
-maintenance = input("Is maintenance enabled? (yes/no): ").lower() == "yes"
+name: str = input("Enter your name: ")
 
-print("\nApplication:", application)
-print("Version:", version)
-print("Active Users:", users)
-print("Maintenance:", maintenance)
+while True:
+try:
+age: int = int(input("Enter your age: "))
+break
+except ValueError:
+print("Enter a valid age.")
 
-print("\nData Types:")
-print(type(application).__name__)
-print(type(version).__name__)
-print(type(users).__name__)
-print(type(maintenance).__name__)
+height: float = float(input("Enter your height: "))
+is_student: bool = input("Are you a student? (yes/no): ").lower() == "yes"
 
+x, y = 10, 20
+x, y = y, x
 
-# 2. type() and isinstance()
-print("\n--- TYPE CHECKING ---")
+MAX_AGE: int = 100
 
-value = input("Enter any value: ")
+print("\n--- BASIC TYPES ---")
+print(f"{name = } | {type(name).**name**}")
+print(f"{age = } | {type(age).**name**}")
+print(f"{height = } | {type(height).**name**}")
+print(f"{is_student = } | {type(is_student).**name**}")
 
-print("Value:", value)
-print("Type:", type(value).__name__)
-print("Is string?", isinstance(value, str))
-print("Is integer?", isinstance(value, int))
+# Other data types
 
-# Input() always returns a string
-number = int(input("Enter a number: "))
+complex_num = complex(age, 2)
+nothing = None
+skills = ["Python", "Git", "SQL"]
+coordinates = (18.52, 73.85)
+unique_values = {10, 20, 20, 30}
+student = {"name": name, "age": age}
 
-print("Number:", number)
-print("Is integer?", isinstance(number, int))
+print("\n--- COLLECTIONS & OTHER TYPES ---")
+for value in [complex_num, nothing, skills, coordinates, unique_values, student]:
+print(f"{value!r:<30} -> {type(value).**name**}")
 
+# Type conversion with error handling
 
-# 3. Constants and Type Conversion
-print("\n--- DATA CONVERSION ---")
+text = input("\nEnter a number for conversion: ")
 
-MAX_USERS = 1000
-current_users = int(input("Enter current users: "))
+for conversion in (int, float):
+try:
+print(f"{conversion.**name**}(): {conversion(text)}")
+except ValueError:
+print(f"{conversion.**name**}(): conversion failed")
 
-remaining = MAX_USERS - current_users
-usage_percentage = (current_users / MAX_USERS) * 100
+print(f"str(): {str(age)}")
+print(f"bool(): {bool(text)}")
 
-print("Remaining user slots:", remaining)
-print("Usage:", round(usage_percentage, 2), "%")
+# Mutable vs immutable, alias vs copy
 
-# Explicit type conversion
-percentage_text = str(round(usage_percentage, 2))
-print("Percentage as string:", percentage_text)
+numbers = [1, 2, 3]
+alias = numbers
+copied = numbers.copy()
 
+numbers.append(4)
 
-# 4. Mutability and Object Identity
-print("\n--- OBJECT IDENTITY ---")
+print("\n--- MUTABILITY & IDENTITY ---")
+print("numbers:", numbers)
+print("alias  :", alias)
+print("copy   :", copied)
 
-scores = [75, 82, 91]
-backup = scores
+print("alias is numbers :", alias is numbers)
+print("copy is numbers  :", copied is numbers)
+print("id(numbers)      :", id(numbers))
 
-print("Original scores:", scores)
-print("Scores ID:", id(scores))
-print("Backup ID:", id(backup))
+# == vs is
 
-scores.append(88)
+a = [1, 2]
+b = [1, 2]
+c = a
 
-print("\nAfter modifying scores:")
-print("Scores:", scores)
-print("Backup:", backup)
-print("Same object?", scores is backup)
+print("\n--- == VS IS ---")
+print("a == b:", a == b)
+print("a is b:", a is b)
+print("a is c:", a is c)
 
-
-# 5. Augmented Assignment
-print("\n--- RESOURCE TRACKER ---")
-
-storage = 250
-print("Starting storage:", storage, "GB")
-
-storage += 100
-print("After adding storage:", storage, "GB")
-
-storage -= 50
-print("After removing storage:", storage, "GB")
-
-storage *= 2
-print("After upgrade:", storage, "GB")
+print("\nMAX_AGE:", MAX_AGE)
+print("Swapped values:", x, y)
+print("None check:", nothing is None)
+print("Program completed.")
 
 
-# 6. Float Precision
-print("\n--- FLOAT PRECISION ---")
 
-first = 0.1
-second = 0.2
-
-result = first + second
-
-print("0.1 + 0.2 =", result)
-print("Using round():", round(result, 2))
-print("Exact comparison:", result == 0.3)
-
-
-# 7. Boolean and Integer Relationship
-print("\n--- BOOLEAN AND INTEGER ---")
-
-login = input("Was login successful? (yes/no): ").lower() == "yes"
-
-print("Login status:", login)
-print("Boolean value as integer:", int(login))
-print("Is bool a subclass of int?", issubclass(bool, int))
-
-
-# 8. Mini Project - AI API Billing
-print("\n--- AI API BILLING SYSTEM ---")
-
-BASE_PRICE = 499
-INCLUDED_TOKENS = 100000
-PRICE_PER_1000 = 0.80
-
-customer = input("Enter customer name: ").strip()
-tokens_used = int(input("Enter total tokens used: "))
-
-if tokens_used < 0:
-    print("Invalid token count.")
-else:
-    extra_tokens = max(0, tokens_used - INCLUDED_TOKENS)
-    extra_cost = (extra_tokens / 1000) * PRICE_PER_1000
-
-    plan = input("Are you a Pro member? (yes/no): ").lower()
-    discount = extra_cost * 0.20 if plan == "yes" else 0
-
-    final_amount = BASE_PRICE + extra_cost - discount
-
-    print("\n----- BILL SUMMARY -----")
-    print("Customer:", customer)
-    print("Tokens Used:", tokens_used)
-    print("Included Tokens:", INCLUDED_TOKENS)
-    print("Extra Tokens:", extra_tokens)
-    print(f"Extra Usage Cost: Rs {extra_cost:.2f}")
-    print(f"Discount: Rs {discount:.2f}")
-    print(f"Final Amount: Rs {final_amount:.2f}")
-
-print("\nProgram completed successfully.")
