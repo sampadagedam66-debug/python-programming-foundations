@@ -1,4 +1,4 @@
-```python
+
 # Basic File Handling Operations
 
 file_name = "student.txt"
@@ -53,5 +53,5 @@ content = file.read()
 print("\nNumber of characters:", len(content))
 
 file.close()
-```
+
 
