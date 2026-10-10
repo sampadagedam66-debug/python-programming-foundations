@@ -1,1 +1,17 @@
-openpyxl
+# python-foundations dependencies
+# Install with: pip install -r requirements.txt
+# Note: csv, json, os, pathlib, datetime, random etc. are built into Python and are not listed here.
+
+# Data handling
+pandas>=2.0
+numpy>=1.24
+
+# Visualization
+matplotlib>=3.7
+
+# Working with web APIs / HTTP
+requests>=2.31
+
+# Testing
+pytest>=7.4
+
