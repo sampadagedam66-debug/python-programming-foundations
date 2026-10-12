@@ -1,4 +1,3 @@
-
 # Basic File Handling Operations
 
 file_name = "student.txt"

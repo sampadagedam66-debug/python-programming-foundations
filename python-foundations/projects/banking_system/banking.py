@@ -9,12 +9,27 @@ Covers: classes & objects | PIN-based authentication | fund transfers |
 
 import csv
 import os
+from decimal import Decimal, InvalidOperation
 
 DATA_FILE = "bank_accounts.csv"
 
 
+def read_amount(prompt):
+    """Keep asking until the user enters a valid positive amount (2 decimals)."""
+    while True:
+        try:
+            amount = Decimal(input(prompt).strip()).quantize(Decimal("0.01"))
+        except InvalidOperation:
+            print("Please enter a valid number.")
+            continue
+        if not amount.is_finite() or amount <= 0:
+            print("Amount must be a positive number.")
+            continue
+        return amount
+
+
 class Account:
-    def __init__(self, account_number, holder_name, pin, balance=0):
+    def __init__(self, account_number, holder_name, pin, balance=Decimal("0")):
         self.account_number = account_number
         self.holder_name = holder_name
         self.pin = pin
@@ -23,13 +38,13 @@ class Account:
 
     def deposit(self, amount):
         self.balance += amount
-        self.transaction_history.append(f"Deposited Rs {amount}")
+        self.transaction_history.append(f"Deposited Rs {amount:,.2f}")
 
     def withdraw(self, amount):
         if amount > self.balance:
             return False
         self.balance -= amount
-        self.transaction_history.append(f"Withdrew Rs {amount}")
+        self.transaction_history.append(f"Withdrew Rs {amount:,.2f}")
         return True
 
 
@@ -50,7 +65,7 @@ class Bank:
                     account_number=row["account_number"],
                     holder_name=row["holder_name"],
                     pin=row["pin"],
-                    balance=float(row["balance"]),
+                    balance=Decimal(row["balance"]),
                 )
                 self.accounts.append(account)
 
@@ -64,7 +79,7 @@ class Bank:
                     "account_number": account.account_number,
                     "holder_name": account.holder_name,
                     "pin": account.pin,
-                    "balance": account.balance,
+                    "balance": f"{account.balance:.2f}",
                 })
 
     def generate_account_number(self):
@@ -99,7 +114,7 @@ class Bank:
             print("Account not found.")
             return
         account.deposit(amount)
-        print(f"Rs {amount} deposited. New balance: Rs {account.balance}")
+        print(f"Rs {amount:,.2f} deposited. New balance: Rs {account.balance:,.2f}")
 
     def withdraw_from_account(self, account_number, pin, amount):
         account = self.authenticate(account_number, pin)
@@ -108,16 +123,16 @@ class Bank:
 
         success = account.withdraw(amount)
         if success:
-            print(f"Rs {amount} withdrawn. New balance: Rs {account.balance}")
+            print(f"Rs {amount:,.2f} withdrawn. New balance: Rs {account.balance:,.2f}")
         else:
-            print(f"Insufficient balance. Current balance: Rs {account.balance}")
+            print(f"Insufficient balance. Current balance: Rs {account.balance:,.2f}")
 
     def check_balance(self, account_number, pin):
         account = self.authenticate(account_number, pin)
         if account is None:
             return
         print(f"Account Holder: {account.holder_name}")
-        print(f"Current Balance: Rs {account.balance}")
+        print(f"Current Balance: Rs {account.balance:,.2f}")
 
     def transfer_funds(self, from_account_number, pin, to_account_number, amount):
         sender = self.authenticate(from_account_number, pin)
@@ -134,15 +149,19 @@ class Bank:
             return
 
         if amount > sender.balance:
-            print(f"Insufficient balance. Current balance: Rs {sender.balance}")
+            print(f"Insufficient balance. Current balance: Rs {sender.balance:,.2f}")
             return
 
         sender.withdraw(amount)
         receiver.deposit(amount)
-        sender.transaction_history.append(f"Transferred Rs {amount} to {receiver.account_number}")
-        receiver.transaction_history.append(f"Received Rs {amount} from {sender.account_number}")
-        print(f"Rs {amount} transferred to {receiver.account_number} successfully.")
-        print(f"Your new balance: Rs {sender.balance}")
+        sender.transaction_history.append(
+            f"Transferred Rs {amount:,.2f} to {receiver.account_number}"
+        )
+        receiver.transaction_history.append(
+            f"Received Rs {amount:,.2f} from {sender.account_number}"
+        )
+        print(f"Rs {amount:,.2f} transferred to {receiver.account_number} successfully.")
+        print(f"Your new balance: Rs {sender.balance:,.2f}")
 
     def view_transaction_history(self, account_number, pin):
         account = self.authenticate(account_number, pin)
@@ -179,28 +198,19 @@ def main():
         if choice == "1":
             holder_name = input("Enter your name: ")
             pin = input("Set a 4-digit PIN: ")
-            try:
-                initial_deposit = float(input("Enter initial deposit amount: Rs "))
-                bank.create_account(holder_name, pin, initial_deposit)
-            except ValueError:
-                print("Deposit amount must be a valid number. Account not created.")
+            initial_deposit = read_amount("Enter initial deposit amount: Rs ")
+            bank.create_account(holder_name, pin, initial_deposit)
 
         elif choice == "2":
             account_number = input("Enter account number: ")
-            try:
-                amount = float(input("Enter deposit amount: Rs "))
-                bank.deposit_to_account(account_number, amount)
-            except ValueError:
-                print("Deposit amount must be a valid number.")
+            amount = read_amount("Enter deposit amount: Rs ")
+            bank.deposit_to_account(account_number, amount)
 
         elif choice == "3":
             account_number = input("Enter account number: ")
             pin = input("Enter PIN: ")
-            try:
-                amount = float(input("Enter withdrawal amount: Rs "))
-                bank.withdraw_from_account(account_number, pin, amount)
-            except ValueError:
-                print("Withdrawal amount must be a valid number.")
+            amount = read_amount("Enter withdrawal amount: Rs ")
+            bank.withdraw_from_account(account_number, pin, amount)
 
         elif choice == "4":
             account_number = input("Enter account number: ")
@@ -211,11 +221,8 @@ def main():
             from_account = input("Enter your account number: ")
             pin = input("Enter your PIN: ")
             to_account = input("Enter receiver's account number: ")
-            try:
-                amount = float(input("Enter amount to transfer: Rs "))
-                bank.transfer_funds(from_account, pin, to_account, amount)
-            except ValueError:
-                print("Transfer amount must be a valid number.")
+            amount = read_amount("Enter amount to transfer: Rs ")
+            bank.transfer_funds(from_account, pin, to_account, amount)
 
         elif choice == "6":
             account_number = input("Enter account number: ")
