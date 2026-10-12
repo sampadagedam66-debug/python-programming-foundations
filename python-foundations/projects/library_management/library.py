@@ -12,6 +12,29 @@ import os
 DATA_FILE = "library_data.csv"
 
 
+def read_text(prompt):
+    """Keep asking until the user enters a non-empty value."""
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("This field cannot be empty.")
+
+
+def read_positive_int(prompt):
+    """Keep asking until the user enters a whole number of at least 1."""
+    while True:
+        try:
+            value = int(input(prompt).strip())
+        except ValueError:
+            print("Please enter a whole number.")
+            continue
+        if value <= 0:
+            print("Number must be at least 1.")
+            continue
+        return value
+
+
 class Book:
     def __init__(self, title, author, isbn, total_copies, available_copies=None):
         self.title = title
@@ -65,6 +88,10 @@ class Library:
         return None
 
     def add_book(self, title, author, isbn, total_copies):
+        if total_copies <= 0:
+            print("Number of copies must be at least 1. Book not added.")
+            return
+
         existing_book = self.find_book_by_isbn(isbn)
         if existing_book is not None:
             # book already exists — add more copies instead of duplicating
@@ -147,28 +174,25 @@ def main():
         choice = input("Enter your choice (1-6): ").strip()
 
         if choice == "1":
-            title = input("Enter title: ")
-            author = input("Enter author: ")
-            isbn = input("Enter ISBN: ")
-            try:
-                total_copies = int(input("Enter number of copies: "))
-                library.add_book(title, author, isbn, total_copies)
-            except ValueError:
-                print("Number of copies must be a whole number. Book not added.")
+            title = read_text("Enter title: ")
+            author = read_text("Enter author: ")
+            isbn = read_text("Enter ISBN: ")
+            total_copies = read_positive_int("Enter number of copies: ")
+            library.add_book(title, author, isbn, total_copies)
 
         elif choice == "2":
             library.view_books()
 
         elif choice == "3":
-            keyword = input("Enter title or author to search: ")
+            keyword = read_text("Enter title or author to search: ")
             library.search_book(keyword)
 
         elif choice == "4":
-            isbn = input("Enter ISBN of book to issue: ")
+            isbn = read_text("Enter ISBN of book to issue: ")
             library.issue_book(isbn)
 
         elif choice == "5":
-            isbn = input("Enter ISBN of book to return: ")
+            isbn = read_text("Enter ISBN of book to return: ")
             library.return_book(isbn)
 
         elif choice == "6":
