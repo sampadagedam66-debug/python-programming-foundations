@@ -1,0 +1,27 @@
+* [33mdc18d3c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m refactor: move imports to top
+[31m|[m * [33ma0da4d4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: Skip invalid CSV rows
+[31m|[m[31m/[m  
+* [33mc0802cb[m Validate library inputs and reject non-positive copies
+* [33m2b90462[m Validate amounts with Decimal-based read_amount
+* [33m1d1cc6f[m Update custom_module.py
+* [33md6a9935[m Update project dependencies
+* [33m5189ed2[m Refactor control flow practice into conditional logic
+* [33mb858be6[m feat: add Excel reader with statistics, search and filter
+* [33m8ed3ffe[m Add variables and data type examples
+* [33mec2d059[m imprC:\Users\SAMPADA\AppData\Local\Python\pythoncore-3.14-64\python.exe c:/Users/SAMPADA/Downloads/python-foundations/python-foundations/basics/variables_and_types.py
+* [33m3a91f33[m Expand variable and data types concept with practical examples
+* [33m4eb5c37[m Refine string handling with validation and password checks
+* [33m92ddeed[m Enhance lists and tuples with interactive examples and validation
+* [33mfda9f00[m Improve functions practice with input validation
+* [33m8b859bb[m Improve quiz game with randomized questions and score tracking
+* [33mf6839dd[m "Improved README"
+* [33m9a83d39[m Update README.md
+*   [33meafec91[m Add project configuration files
+[33m|[m[34m\[m  
+[33m|[m * [33m98e5a4e[m Initial commit
+* [33md7c6161[m Add Python projects
+* [33m99cfd65[m Add Python mini projects
+* [33me6ecd7f[m Add python modules and packages
+* [33mb2fe2bd[m Add file handling examples
+* [33m572b96b[m Add data handling examples
+* [33m7e3c893[m Add Python basics
