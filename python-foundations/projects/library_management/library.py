@@ -55,20 +55,24 @@ class Library:
         if not os.path.exists(self.data_file):
             return  # no saved data yet, start with an empty library
 
-        with open(self.data_file, "r") as file:
+        with open(self.data_file, "r", newline="", encoding="utf-8") as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                book = Book(
-                    title=row["title"],
-                    author=row["author"],
-                    isbn=row["isbn"],
-                    total_copies=int(row["total_copies"]),
-                    available_copies=int(row["available_copies"]),
-                )
+            for line_number, row in enumerate(reader, start=2):  # line 1 is the header
+                try:
+                    book = Book(
+                        title=row["title"],
+                        author=row["author"],
+                        isbn=row["isbn"],
+                        total_copies=int(row["total_copies"]),
+                        available_copies=int(row["available_copies"]),
+                    )
+                except (KeyError, ValueError, TypeError):
+                    print(f"Skipping invalid row at line {line_number} in {self.data_file}.")
+                    continue
                 self.books.append(book)
 
     def save_books(self):
-        with open(self.data_file, "w", newline="") as file:
+        with open(self.data_file, "w", newline="", encoding="utf-8") as file:
             fieldnames = ["title", "author", "isbn", "total_copies", "available_copies"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
@@ -97,11 +101,13 @@ class Library:
             # book already exists — add more copies instead of duplicating
             existing_book.total_copies += total_copies
             existing_book.available_copies += total_copies
+            self.save_books()
             print(f"Added {total_copies} more copies of '{existing_book.title}'.")
             return
 
         new_book = Book(title, author, isbn, total_copies)
         self.books.append(new_book)
+        self.save_books()
         print(f"'{title}' added to the library.")
 
     def view_books(self):
@@ -140,6 +146,7 @@ class Library:
             return
 
         book.available_copies -= 1
+        self.save_books()
         print(f"'{book.title}' issued successfully. Remaining copies: {book.available_copies}")
 
     def return_book(self, isbn):
@@ -153,6 +160,7 @@ class Library:
             return
 
         book.available_copies += 1
+        self.save_books()
         print(f"'{book.title}' returned successfully. Available copies: {book.available_copies}")
 
 
