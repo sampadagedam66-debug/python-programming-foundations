@@ -1,10 +1,7 @@
-"""
-oop_basics.py
-Topic: Object-Oriented Programming Basics
-"""
+"""oop_basics.py - Object-Oriented Programming Basics"""
 
 # 1. Class and Object - Book
-print("\n--- BOOK DETAILS ---")
+print("\n--- BOOK ---")
 
 class Book:
     def __init__(self, title, author):
@@ -12,19 +9,30 @@ class Book:
         self.author = author
         self.available = True
 
-    def show(self):
+    def __str__(self):
         status = "Available" if self.available else "Not Available"
-        print(f"{self.title} by {self.author} - {status}")
+        return f"{self.title} by {self.author} - {status}"
+
+    def borrow(self):
+        if self.available:
+            self.available = False
+            print("Book borrowed!")
+        else:
+            print("Already borrowed.")
+
+    def return_book(self):
+        self.available = True
+        print("Book returned!")
+
+book = Book(input("Book name: "), input("Author: "))
+print(book)
+book.borrow()
+print(book)
+book.return_book()
+print(book)
 
 
-title = input("Enter book name: ")
-author = input("Enter author name: ")
-
-book = Book(title, author)
-book.show()
-
-
-# 2. Method that changes data - Bank Account
+# 2. Bank Account
 print("\n--- BANK ACCOUNT ---")
 
 class Account:
@@ -42,23 +50,14 @@ class Account:
         else:
             print("Insufficient balance!")
 
-
-name = input("Enter account holder: ")
-balance = float(input("Enter starting balance: "))
-
-account = Account(name, balance)
-
-deposit = float(input("Enter deposit amount: "))
-account.deposit(deposit)
-
-withdraw = float(input("Enter withdrawal amount: "))
-account.withdraw(withdraw)
-
+account = Account(input("Holder: "), float(input("Starting balance: ")))
+account.deposit(float(input("Deposit: ")))
+account.withdraw(float(input("Withdraw: ")))
 print("Final balance: Rs", account.balance)
 
 
-# 3. Multiple Objects - Students
-print("\n--- STUDENT RECORDS ---")
+# 3. Students
+print("\n--- STUDENTS ---")
 
 class Student:
     def __init__(self, name, marks):
@@ -68,18 +67,13 @@ class Student:
     def show(self):
         print(self.name, "-", self.marks, "marks")
 
-
-student1 = Student(input("Enter first student: "),
-                   int(input("Enter marks: ")))
-
-student2 = Student(input("Enter second student: "),
-                   int(input("Enter marks: ")))
-
-student1.show()
-student2.show()
+s1 = Student(input("Student 1: "), int(input("Marks: ")))
+s2 = Student(input("Student 2: "), int(input("Marks: ")))
+s1.show()
+s2.show()
 
 
-# 4. self + Computed Method - Rectangle
+# 4. Rectangle
 print("\n--- RECTANGLE ---")
 
 class Rectangle:
@@ -93,17 +87,12 @@ class Rectangle:
     def perimeter(self):
         return 2 * (self.length + self.width)
 
-
-length = float(input("Enter length: "))
-width = float(input("Enter width: "))
-
-rectangle = Rectangle(length, width)
-
-print("Area:", rectangle.area())
-print("Perimeter:", rectangle.perimeter())
+rect = Rectangle(float(input("Length: ")), float(input("Width: ")))
+print("Area:", rect.area())
+print("Perimeter:", rect.perimeter())
 
 
-# 5. Mini Project - Food Order
+# 5. Food Order
 print("\n--- FOOD ORDER ---")
 
 class Order:
@@ -121,15 +110,9 @@ class Order:
         print("Items:", self.items)
         print("Total: Rs", self.total)
 
-
-customer = input("Enter your name: ")
-order = Order(customer)
-
-for i in range(2):
-    food = input("Enter food item: ")
-    price = float(input("Enter price: "))
-    order.add_item(food, price)
-
+order = Order(input("Your name: "))
+for _ in range(2):
+    order.add_item(input("Food item: "), float(input("Price: ")))
 order.show_order()
 
 print("\n🎉 Thank you for using the program!")
