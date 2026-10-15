@@ -110,9 +110,13 @@ def movie_ticket():
     print("🎉 Enjoy your movie!")
 
 
-# Run all sections
-number_plate()
-email_cleanup()
-shopping_receipt()
-password_checker()
-movie_ticket()
+# 6. Palindrome Checker
+def palindrome_checker():
+    print("\n--- PALINDROME CHECKER ---")
+
+    text = input("Enter a word or phrase: ").lower().replace(" ", "")
+
+    if not text:
+        print("Nothing entered.")
+    elif text == text[::-1]:
+        print("Yes, it's a palindrome!")
